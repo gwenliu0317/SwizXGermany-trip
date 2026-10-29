@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>德瑞之旅手冊</title>
+<style>
+/* Layout: 車站看板式手冊 — 頂部出發看板、貼頂導覽、單欄時間軸(路線圖),其餘區塊安靜 */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --surface2:#E3E9ED; --line:#CBD5DB;
+  --ink:#14212B; --ink2:#4A5B67; --signal:#D9232D; --signal-bg:#FBE6E7;
+  --board:#0E1A24; --board-ink:#FFC94D; --board-dim:#8FA3B0;
+  --lucerne:#2A7DA6; --zurich:#7A5BA6; --munich:#2F8F6B; --transit:#6B7782;
+  --warn:#9A5B00; --warn-bg:#FFF1D6; --cold:#1B5E8C; --cold-bg:#DDEEF8; --ok:#1F7A4D;
+  --f-disp:'Segoe UI','Microsoft JhengHei','PingFang TC','Noto Sans TC',system-ui,sans-serif;
+  --f-body:'Microsoft JhengHei','PingFang TC','Noto Sans TC',system-ui,-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C151C; --surface:#15232E; --surface2:#1D2F3C; --line:#2B4050;
+  --ink:#E6EDF1; --ink2:#9DB0BC; --signal:#FF6168; --signal-bg:#3A1A1E;
+  --board:#060D13; --board-ink:#FFC94D; --board-dim:#7F94A2;
+  --lucerne:#5BB0DB; --zurich:#A98BD6; --munich:#5CC79B; --transit:#8FA0AC;
+  --warn:#FFC266; --warn-bg:#3A2C10; --cold:#8CCBF0; --cold-bg:#12303F; --ok:#5CC79B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C151C; --surface:#15232E; --surface2:#1D2F3C; --line:#2B4050;
+  --ink:#E6EDF1; --ink2:#9DB0BC; --signal:#FF6168; --signal-bg:#3A1A1E;
+  --board:#060D13; --board-ink:#FFC94D; --board-dim:#7F94A2;
+  --lucerne:#5BB0DB; --zurich:#A98BD6; --munich:#5CC79B; --transit:#8FA0AC;
+  --warn:#FFC266; --warn-bg:#3A2C10; --cold:#8CCBF0; --cold-bg:#12303F; --ok:#5CC79B; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+a{color:var(--lucerne)}
+a:focus-visible,button:focus-visible,input:focus-visible+span,summary:focus-visible{outline:3px solid var(--board-ink);outline-offset:2px}
+.wrap{max-width:860px;margin:0 auto}
+h1,h2,h3,p{margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--board)}
+
+/* 出發看板 */
+.board{background:var(--board);color:var(--board-ink);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));
+  padding:28px max(16px,env(safe-area-inset-left,0px)) 24px}
+.board .wrap{display:grid;gap:18px}
+.board small{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;color:var(--board-dim);text-transform:uppercase}
+.board h1{font-family:var(--f-disp);font-weight:800;font-size:clamp(34px,8vw,56px);line-height:1.05;color:#fff;letter-spacing:-.01em}
+.board h1 span{color:var(--board-ink)}
+.route{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-weight:700;color:#fff}
+.route i{display:block;width:22px;height:2px;background:var(--board-ink)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:#24394A;border:1px solid #24394A}
+.facts div{background:var(--board);padding:10px 12px;min-width:0}
+.facts b{display:block;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--board-dim)}
+.facts span{font-family:var(--f-mono);font-weight:600;font-size:15px;color:var(--board-ink)}
+
+/* 導覽 */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));
+  padding:0 max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:28px}
+nav a{flex:none;padding:12px 10px;color:var(--ink2);text-decoration:none;font-weight:500;font-size:14px;border-bottom:3px solid transparent}
+nav a[aria-current="true"]{color:var(--ink);border-color:var(--signal);font-weight:700}
+
+section{padding-top:40px;scroll-margin-top:calc(52px + env(safe-area-inset-top,0px))}
+h2{font-size:24px;font-weight:700;line-height:1.3;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+h2 small{font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--ink2);letter-spacing:.08em}
+.lead{color:var(--ink2);margin-top:6px;max-width:62ch}
+.stack{display:grid;gap:12px;margin-top:18px}
+
+/* 三項重點 */
+.alerts{display:grid;gap:12px;margin-top:18px}
+.alert{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--signal);padding:14px 16px;min-width:0}
+.alert.w{border-left-color:var(--board-ink)}
+.alert h3{font-size:16px;font-weight:700;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.alert p,.alert li{color:var(--ink2);font-size:14.5px}
+.alert ul{margin:6px 0 0;padding-left:1.2em}
+.tag{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.08em;padding:1px 7px;background:var(--signal);color:#fff;white-space:nowrap}
+:root[data-theme="dark"] .tag{color:#1a0507}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag{color:#1a0507}}
+.tag.y{background:var(--board-ink);color:#1b1300}
+
+/* 清單 */
+.prog{display:flex;align-items:center;gap:12px;margin-top:14px;font-family:var(--f-mono);font-size:13px;color:var(--ink2)}
+.bar{flex:1;height:6px;background:var(--surface2);max-width:240px}.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .2s}
+.chk{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin-top:14px}
+.chk label{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);padding:12px 14px;cursor:pointer;min-width:0}
+.chk input{position:absolute;opacity:0;pointer-events:none}
+.chk .box{flex:none;width:22px;height:22px;border:2px solid var(--ink2);margin-top:2px;display:grid;place-items:center}
+.chk input:checked+.box{background:var(--ok);border-color:var(--ok)}
+.chk input:checked+.box::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk input:checked~.txt{color:var(--ink2);text-decoration:line-through}
+.chk .txt{min-width:0}.chk .txt b{display:block;font-weight:700}.chk .txt em{display:block;font-style:normal;font-size:13px;color:var(--ink2);line-height:1.5}
+.chk .new{font-family:var(--f-mono);font-size:10.5px;font-weight:600;color:var(--lucerne);border:1px solid var(--lucerne);padding:0 5px;margin-left:6px;vertical-align:2px;letter-spacing:.06em}
+
+/* 行程時間軸 */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.filters button{font:inherit;font-size:13.5px;font-weight:500;padding:6px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tl{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:14px}
+.day{display:grid;grid-template-columns:64px minmax(0,1fr);gap:0 14px;position:relative}
+.day::before{content:"";position:absolute;left:31px;top:44px;bottom:-14px;width:3px;background:var(--c,var(--transit));opacity:.35}
+.day:last-child::before{display:none}
+.dn{width:64px;height:44px;background:var(--c,var(--transit));color:#fff;display:grid;place-items:center;font-family:var(--f-disp);font-weight:800;line-height:1;text-align:center;align-content:center}
+:root[data-theme="dark"] .dn{color:#0a1218}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dn{color:#0a1218}}
+.dn span{font-family:var(--f-mono);font-size:10px;font-weight:600;letter-spacing:.1em;opacity:.85}
+.dn b{font-size:20px}
+.card{background:var(--surface);border:1px solid var(--line);padding:14px 16px 16px;min-width:0;display:grid;gap:10px}
+.card header{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between}
+.card h3{font-size:17px;font-weight:700;line-height:1.4}
+.date{font-family:var(--f-mono);font-size:13px;color:var(--ink2);font-weight:500;white-space:nowrap}
+.card ul{margin:0;padding-left:1.15em;display:grid;gap:3px}
+.card li{overflow-wrap:anywhere}
+.t{font-family:var(--f-mono);font-weight:600;font-size:13.5px}
+.notes{display:grid;gap:6px}
+.note{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;font-size:14px;line-height:1.55;background:var(--warn-bg);color:var(--ink)}
+.note .k{flex:none;font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.06em;padding:2px 6px;background:var(--warn);color:#fff;margin-top:2px}
+:root[data-theme="dark"] .note .k{color:#1b1300}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .note .k{color:#1b1300}}
+.note.cold{background:var(--cold-bg)}.note.cold .k{background:var(--cold)}
+.note.red{background:var(--signal-bg)}.note.red .k{background:var(--signal)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--ink2);border-top:1px dashed var(--line);padding-top:10px}
+.meta b{font-weight:700;color:var(--ink)}
+.todo{border:1px dashed var(--ink2);padding:0 6px;color:var(--ink2);font-size:12.5px}
+.stay{color:var(--ink)}
+.stay .p{font-family:var(--f-mono);font-size:11px;font-weight:600;background:var(--warn-bg);color:var(--warn);padding:1px 6px;margin-left:4px}
+
+/* 穿搭 */
+.wx{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));margin-top:18px}
+.wxc{background:var(--surface);border:1px solid var(--line);padding:16px;min-width:0}
+.wxc small{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink2)}
+.wxc .deg{font-family:var(--f-disp);font-weight:800;font-size:34px;line-height:1.1;margin:2px 0 4px}
+.wxc.cold{background:var(--cold-bg);border-color:var(--cold)}.wxc.cold .deg{color:var(--cold)}
+.wxc p{font-size:14px;color:var(--ink2)}
+.layers{margin-top:14px;background:var(--surface);border:1px solid var(--line);overflow-x:auto}
+.layers table{border-collapse:collapse;width:100%;min-width:480px}
+.layers th,.layers td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+.layers th{width:84px;font-weight:700;white-space:nowrap}
+.layers tr:last-child th,.layers tr:last-child td{border-bottom:0}
+.layers thead th{font-family:var(--f-mono);font-size:11.5px;font-weight:500;color:var(--ink2);letter-spacing:.08em;background:var(--surface2)}
+.strip{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:3px;margin-top:10px}
+.strip div{background:var(--surface2);text-align:center;padding:6px 0 5px;font-family:var(--f-mono);font-size:11px;line-height:1.3;color:var(--ink2)}
+.strip div b{display:block;font-size:13px;color:var(--ink)}
+.strip .m{background:var(--cold);color:#fff}.strip .m b{color:#fff}
+:root[data-theme="dark"] .strip .m,:root[data-theme="dark"] .strip .m b{color:#06141c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .strip .m,:root:not([data-theme="light"]) .strip .m b{color:#06141c}}
+.legend{font-size:13px;color:var(--ink2);margin-top:8px;display:flex;gap:16px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:5px}
+
+/* 實用資訊 */
+.info{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));margin-top:18px}
+.ib{background:var(--surface);border:1px solid var(--line);padding:16px;min-width:0}
+.ib h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.ib p,.ib li{font-size:14.5px;color:var(--ink2)}
+.ib ul{margin:4px 0 0;padding-left:1.2em;display:grid;gap:4px}
+.ib strong{color:var(--ink)}
+.tw{overflow-x:auto;margin-top:6px}
+.tw table{border-collapse:collapse;width:100%;min-width:420px;font-size:14px}
+.tw th,.tw td{text-align:left;padding:6px 10px 6px 0;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+.tw th{color:var(--ink);font-weight:700;white-space:nowrap}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--ink)}
+.stays{display:grid;gap:8px;margin-top:6px}
+.stays div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:14.5px}
+.stays i{width:10px;height:10px;flex:none;align-self:center}
+
+.pend{margin-top:18px;background:var(--surface);border:1px dashed var(--ink2);padding:16px}
+.pend ul{margin:0;padding-left:1.2em;display:grid;gap:4px;color:var(--ink2);font-size:14.5px}
+footer{margin-top:40px;font-size:12.5px;color:var(--ink2);font-family:var(--f-mono)}
+
+
+/* 景點美食 / 行李 */
+.gd{margin-top:14px;display:grid;gap:10px}
+details.g{background:var(--surface);border:1px solid var(--line)}
+details.g summary{cursor:pointer;padding:14px 16px;font-weight:700;font-size:16px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;list-style:none}
+details.g summary::-webkit-details-marker{display:none}
+details.g summary::after{content:"+";margin-left:auto;font-family:var(--f-mono);font-size:20px;color:var(--ink2)}
+details.g[open] summary::after{content:"\2212"}
+details.g summary small{font-family:var(--f-mono);font-size:11.5px;font-weight:500;color:var(--ink2);letter-spacing:.06em}
+.gb{padding:0 16px 16px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.gb>div{min-width:0}
+.gb h4{margin:0 0 4px;font-size:12px;font-family:var(--f-mono);letter-spacing:.1em;color:var(--ink2);font-weight:600}
+.gb ul{margin:0;padding-left:1.15em;display:grid;gap:3px;font-size:14.5px;color:var(--ink2)}
+.gb li strong{color:var(--ink)}
+.gb .full{grid-column:1/-1}
+.src{font-size:13px;color:var(--ink2);margin-top:12px;max-width:66ch}
+.ideas{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:4px;font-size:14px}
+.ideas b{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:var(--lucerne);font-weight:600}
+.ideas ul{margin:0;padding-left:1.15em;color:var(--ink2);display:grid;gap:2px}
+.pk{margin-top:18px;display:grid;gap:20px}
+.pk h3{font-size:15px;font-weight:700;margin:0}
+.pk .chk{margin-top:8px}
+
+/* 總覽 / 氣溫圖 */
+.day{scroll-margin-top:calc(60px + env(safe-area-inset-top,0px))}
+.rib{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:3px;margin-top:16px}
+.rib a{display:grid;gap:2px;justify-items:center;align-content:start;padding:8px 2px 8px;background:var(--c);color:#fff;text-decoration:none;font-family:var(--f-mono);font-size:11px;line-height:1.3;text-align:center;min-height:84px}
+.rib b{font-family:var(--f-disp);font-size:20px;font-weight:800;line-height:1.1}
+.rib em{font-style:normal;font-size:10.5px;opacity:.92}
+.rib i{font-style:normal;font-size:10px;font-weight:600;background:rgba(0,0,0,.3);padding:0 5px;margin-top:2px}
+:root[data-theme="dark"] .rib a{color:#06141c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rib a{color:#06141c}}
+:root[data-theme="dark"] .rib i{background:rgba(255,255,255,.4)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rib i{background:rgba(255,255,255,.4)}}
+.rl{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:13.5px;color:var(--ink2)}
+.rl span{display:inline-flex;align-items:center;gap:6px}.rl i{width:12px;height:12px;display:inline-block}
+.tc{margin-top:14px;background:var(--surface);border:1px solid var(--line);padding:14px 16px 10px}
+.tr{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;align-items:center;padding:5px 0}
+.tr>span{font-size:13.5px;font-weight:500}
+.tt{position:relative;height:28px;background:var(--surface2)}
+.tt i{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:var(--f-mono);font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+:root[data-theme="dark"] .tt i{color:#06141c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tt i{color:#06141c}}
+.tt b.o{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap}
+.tt u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink2);text-decoration:none}
+.ax{position:relative;height:18px;margin-left:94px;font-family:var(--f-mono);font-size:11px;color:var(--ink2)}
+.ax span{position:absolute;transform:translateX(-50%)}
+
+/* 每日天氣 */
+.wxr{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.wxb{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);padding:5px 10px;font-size:13px;min-width:0}
+.wxb.cold{background:var(--cold-bg)}
+.wxb em{font-style:normal;color:var(--ink2);font-size:12.5px}
+.wxb b{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.mt{position:relative;display:inline-block;width:64px;height:6px;background:var(--line);flex:none}
+.mt i{position:absolute;top:0;bottom:0}
+.mt u{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--ink2);text-decoration:none}
+.wxs{font-family:var(--f-mono);font-size:10.5px;color:var(--ink2);border:1px solid var(--line);padding:0 6px}
+.wxs.f{background:var(--ok);border-color:var(--ok);color:#fff}
+.wt{font-size:13.5px;color:var(--ink2);margin:0}
+@media (max-width:520px){.rib{grid-template-columns:repeat(7,minmax(0,1fr))}.tr{grid-template-columns:70px minmax(0,1fr)}.ax{margin-left:80px}}
+@media (max-width:520px){
+  .day{grid-template-columns:48px minmax(0,1fr);gap:0 10px}
+  .day::before{left:23px}
+  .dn{width:48px;height:40px}.dn b{font-size:17px}
+  .strip{grid-template-columns:repeat(7,minmax(0,1fr))}
+  h2{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+
+<style>html{color-scheme:light dark}body{margin:0}</style>
+</head>
+<body>
+<div class="board">
+  <div class="wrap">
+    <small>Trip Handbook · 2026</small>
+    <h1>德瑞之旅<br><span>11.01 – 11.13</span></h1>
+    <div class="route" aria-label="路線">琉森<i></i>因特拉肯<i></i>蘇黎世<i></i>慕尼黑</div>
+    <div class="facts">
+      <div><b>天數</b><span>13 DAYS</span></div>
+      <div><b>交通</b><span>INTERRAIL</span></div>
+      <div><b>時差</b><span>慢台灣 7 小時</span></div>
+      <div><b>氣溫</b><span>5~11°C / 山 -4~-10°C</span></div>
+    </div>
+  </div>
+</div>
+
+<nav aria-label="章節"><div class="wrap">
+  <a href="#before">出發前</a><a href="#plan">每日行程</a><a href="#guide">景點美食</a><a href="#wear">天氣穿搭</a><a href="#pack">行李</a><a href="#info">實用資訊</a><a href="#todo">待補</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="overview">
+  <h2>旅程總覽 <small>AT A GLANCE</small></h2>
+  <div class="rib"><a href="#d1" style="--c:var(--transit)"><b>1</b><em>11/01</em><em>週日</em><em>移動</em><i>飛</i></a><a href="#d2" style="--c:var(--lucerne)"><b>2</b><em>11/02</em><em>週一</em><em>琉森</em></a><a href="#d3" style="--c:var(--lucerne)"><b>3</b><em>11/03</em><em>週二</em><em>琉森</em><i>山</i></a><a href="#d4" style="--c:var(--zurich)"><b>4</b><em>11/04</em><em>週三</em><em>蘇黎世</em></a><a href="#d5" style="--c:var(--zurich)"><b>5</b><em>11/05</em><em>週四</em><em>蘇黎世</em></a><a href="#d6" style="--c:var(--zurich)"><b>6</b><em>11/06</em><em>週五</em><em>蘇黎世</em></a><a href="#d7" style="--c:var(--zurich)"><b>7</b><em>11/07</em><em>週六</em><em>蘇黎世</em><i>山</i></a><a href="#d8" style="--c:var(--munich)"><b>8</b><em>11/08</em><em>週日</em><em>慕尼黑</em><i>車</i></a><a href="#d9" style="--c:var(--munich)"><b>9</b><em>11/09</em><em>週一</em><em>慕尼黑</em></a><a href="#d10" style="--c:var(--munich)"><b>10</b><em>11/10</em><em>週二</em><em>慕尼黑</em><i>山</i></a><a href="#d11" style="--c:var(--munich)"><b>11</b><em>11/11</em><em>週三</em><em>慕尼黑</em></a><a href="#d12" style="--c:var(--transit)"><b>12</b><em>11/12</em><em>週四</em><em>移動</em><i>飛</i></a><a href="#d13" style="--c:var(--transit)"><b>13</b><em>11/13</em><em>週五</em><em>移動</em></a></div>
+  <div class="rl"><span><i style="background:var(--lucerne)"></i>琉森 2 晚</span><span><i style="background:var(--zurich)"></i>蘇黎世 4 晚</span><span><i style="background:var(--munich)"></i>慕尼黑 4 晚</span><span><i style="background:var(--transit)"></i>飛行與移動</span><span>山 = 山區行程日 · 車 = 要預約座位的長途火車</span></div>
+</section>
+
+<section id="before">
+  <h2>出發前必看 <small>BEFORE YOU GO</small></h2>
+  <div class="alerts">
+    <div class="alert">
+      <h3><span class="tag">護照</span> 護照要放隨身包,不要放託運行李</h3>
+      <ul>
+        <li>護照效期要超過離開申根區日期(11/12)後至少 3 個月,也就是到 2027/2/12 以後都要有效。</li>
+        <li>第一次入境(蘇黎世)會被登記指紋與臉部照片,請預留排隊時間。</li>
+        <li>建議另存一份護照影本和照片在手機與雲端,並在行李內放紙本影本。</li>
+        <li>ETIAS 目前尚未生效,也沒有確定啟用日期,11 月出發不需要申請。出發前一週再到官方網站確認一次。</li>
+      </ul>
+    </div>
+    <div class="alert w">
+      <h3><span class="tag y">時差</span> 11 月瑞士、德國慢台灣 7 小時</h3>
+      <p>歐洲夏令時間在 10/25 結束,11 月比台灣慢 7 小時。手機設定自動時區即可,訂票和集合時間一律看當地時間。</p>
+    </div>
+    <div class="alert w">
+      <h3><span class="tag y">Interrail</span> 通行證與座位預約</h3>
+      <ul>
+        <li>出發前先在 App 設定好旅行日期,第一次搭車前要啟用。</li>
+        <li>11/8 蘇黎世 09:32 → 慕尼黑 13:16 要先買座位票,並把訂位車票印出來。</li>
+        <li>11/10 新天鵝堡一日遊和山上行程是另外購買的票,不含在通行證內。</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px;font-size:17px">行前待辦</h3>
+  <div class="prog"><span id="pn">0 / 16</span><span class="bar"><i id="pb"></i></span></div>
+  <div class="chk" id="chk"><label><input type="checkbox" id="c-passport" data-k="passport"><span class="box"></span><span class="txt"><b>護照與機票</b><em>護照效期到 2027/2 以後,機票電子檔存手機並列印</em></span></label><label><input type="checkbox" id="c-pass2" data-k="pass2"><span class="box"></span><span class="txt"><b>護照影本<span class="new">建議</span></b><em>紙本與手機各存一份護照影本和照片</em></span></label><label><input type="checkbox" id="c-ins" data-k="ins"><span class="box"></span><span class="txt"><b>旅平險與海外醫療<span class="new">建議</span></b><em>出發前買好,保單號碼存手機</em></span></label><label><input type="checkbox" id="c-pin" data-k="pin"><span class="box"></span><span class="txt"><b>信用卡 4 位數 PIN</b><em>向銀行申請預借現金 PIN,德國售票機會用到</em></span></label><label><input type="checkbox" id="c-fx" data-k="fx"><span class="box"></span><span class="txt"><b>換匯(瑞士法郎 / 歐元)</b><em>瑞士用 CHF,德國用 EUR</em></span></label><label><input type="checkbox" id="c-sim" data-k="sim"><span class="box"></span><span class="txt"><b>國際漫遊</b><em>費用上限 2,600 元,出發前確認已開通</em></span></label><label><input type="checkbox" id="c-ir" data-k="ir"><span class="box"></span><span class="txt"><b>Interrail 通行證<span class="new">建議</span></b><em>設定旅行日期,啟用通行證</em></span></label><label><input type="checkbox" id="c-seat" data-k="seat"><span class="box"></span><span class="txt"><b>11/8 座位票</b><em>蘇黎世 09:32 → 慕尼黑 13:16,要先購買,並把訂位車票印出來</em></span></label><label><input type="checkbox" id="c-sbb" data-k="sbb"><span class="box"></span><span class="txt"><b>SBB Mobile App<span class="new">建議</span></b><em>瑞士火車時刻與購票;德國另外裝 DB Navigator</em></span></label><label><input type="checkbox" id="c-adp" data-k="adp"><span class="box"></span><span class="txt"><b>轉接頭</b><em>Type J 與 Type C / E,吹風機和筆電特別注意</em></span></label><label><input type="checkbox" id="c-emg" data-k="emg"><span class="box"></span><span class="txt"><b>緊急聯絡資訊</b><em>機場、飯店、保險、同行每個人的緊急聯絡人與電話,手機和紙本各一份</em></span></label><label><input type="checkbox" id="c-noodle" data-k="noodle"><span class="box"></span><span class="txt"><b>泡麵 / 免洗筷</b></span></label><label><input type="checkbox" id="c-bottle" data-k="bottle"><span class="box"></span><span class="txt"><b>保溫瓶</b><em>山上和天冷時都很有用</em></span></label><label><input type="checkbox" id="c-mask" data-k="mask"><span class="box"></span><span class="txt"><b>口罩</b></span></label><label><input type="checkbox" id="c-gloves" data-k="gloves"><span class="box"></span><span class="txt"><b>手套、毛帽、圍巾<span class="new">建議</span></b><em>山區行程日必備</em></span></label><label><input type="checkbox" id="c-shoes" data-k="shoes"><span class="box"></span><span class="txt"><b>防滑耐走的鞋</b></span></label></div>
+  <p class="lead" style="font-size:13px;margin-top:10px">勾選狀態只存在這支手機或這個瀏覽器。標示「建議」的是我補充的項目,不在你原本的清單內。</p>
+</section>
+
+<section id="plan">
+  <h2>每日行程 <small>ITINERARY</small></h2>
+  <p class="lead">依你目前的檔案整理。空白的午餐、晚餐和待定飯店會顯示成虛線標記,之後確定再補。每天卡片上的氣溫目前是 11 月平均值,有實際預報後會換成預報。</p>
+  <div class="filters" role="group" aria-label="依城市篩選" id="filters"><button type="button" data-f="all" aria-pressed="true">全部</button><button type="button" data-f="l" aria-pressed="false">琉森</button><button type="button" data-f="z" aria-pressed="false">蘇黎世</button><button type="button" data-f="m" aria-pressed="false">慕尼黑</button></div>
+  <ol class="tl" id="tl"><li class="day" id="d1" style="--c:var(--transit)"><div class="dn"><span>DAY</span><b>1</b></div><article class="card"><header><h3>啟程 桃園 → 杜拜</h3><span class="date">11/01(日)· 移動</span></header><div class="wxr"><span class="wxb"><em>桃園</em><b>20~25°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:123.1%;width:19.2%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:機上冷氣強,帶一件薄外套。</p><ul><li><span class="t">23:00</span> 桃園機場起飛</li><li><span class="t">04:45</span>(11/2)抵達杜拜,轉機</li><li>飛行約 9 小時 45 分</li></ul><div class="notes"><div class="note red"><span class="k">護照</span><span>機票和護照放隨身包,辦理報到時隨手拿得到。</span></div></div><div class="meta"><span><b>晚</b> 機上</span></div></article></li><li class="day" id="d2" style="--c:var(--lucerne)"><div class="dn"><span>DAY</span><b>2</b></div><article class="card"><header><h3>杜拜 → 蘇黎世 → 琉森</h3><span class="date">11/02(一)· 琉森</span></header><div class="wxr"><span class="wxb"><em>蘇黎世 / 琉森</em><b>3~10°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:57.7%;width:26.9%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:下機後加厚外套和圍巾,琉森傍晚更冷。</p><ul><li><span class="t">08:25</span> 杜拜起飛 → <span class="t">12:25</span> 蘇黎世(當地時間)</li><li>抵達後搭火車前往琉森</li></ul><div class="notes"><div class="note red"><span class="k">入境</span><span>蘇黎世入境會登記指紋和臉部照片,預留排隊時間。</span></div><div class="note "><span class="k">時差</span><span>手機改成當地時間,到琉森盡量撐到晚上再睡。</span></div></div><div class="ideas"><b>可排入</b><ul><li>傍晚抵達後輕鬆走:卡佩爾廊橋、舊城區、湖畔夜景</li><li>晚餐候選:Old Swiss House、Pfistern、Galliker</li></ul></div><div class="meta"><span><b>早</b> 機上</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://maps.app.goo.gl/XAJSxi4dTwSk1aHm6">Hotel Seeburg, Luzern</a></span></div></article></li><li class="day" id="d3" style="--c:var(--lucerne)"><div class="dn"><span>DAY</span><b>3</b></div><article class="card"><header><h3>琉森 → 因特拉肯一日遊(少女峰)</h3><span class="date">11/03(二)· 琉森</span></header><div class="wxr"><span class="wxb"><em>因特拉肯</em><b>2~9°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:53.8%;width:26.9%;background:var(--lucerne)"></i></span></span><span class="wxb cold"><em>少女峰</em><b>-10~-4°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:7.7%;width:23.1%;background:var(--zurich)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:羽絨衣、厚手套、毛帽,鞋底要防滑。</p><ul><li>琉森出發,前往因特拉肯與少女峰</li></ul><div class="notes"><div class="note cold"><span class="k">山區</span><span>山上 -4~-10°C。穿羽絨衣、厚手套、毛帽,鞋底要防滑。</span></div><div class="note "><span class="k">預約</span><span>少女峰車票與時段請先確認。</span></div><div class="note red"><span class="k">11/3 路線</span><span>上山走艾格快線,下山走小夏戴克、溫根、勞特布魯嫩。細節見「景點美食」。</span></div></div><div class="ideas"><b>可排入</b><ul><li>山上郵局寄明信片回台灣,約 CHF 2.5</li><li>午餐或晚餐:因特拉肯的 Husi Bierhaus 或 Bebbis(起司火鍋)</li></ul></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://maps.app.goo.gl/XAJSxi4dTwSk1aHm6">Hotel Seeburg, Luzern</a></span></div></article></li><li class="day" id="d4" style="--c:var(--zurich)"><div class="dn"><span>DAY</span><b>4</b></div><article class="card"><header><h3>琉森 → 蘇黎世</h3><span class="date">11/04(三)· 蘇黎世</span></header><div class="wxr"><span class="wxb"><em>蘇黎世</em><b>3~10°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:57.7%;width:26.9%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:防風外套加圍巾。</p><ul><li>搭火車前往蘇黎世,辦理入住</li></ul><div class="ideas"><b>可排入</b><ul><li>入住後散步班霍夫大街到湖畔</li><li>甜點:Sprüngli Café;晚餐:Zeughauskeller</li></ul></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://maps.app.goo.gl/2QUWyUzPDzkNYvRX6">Moxy Zurich</a></span></div></article></li><li class="day" id="d5" style="--c:var(--zurich)"><div class="dn"><span>DAY</span><b>5</b></div><article class="card"><header><h3>蘇黎世 → Belimo 辦公室</h3><span class="date">11/05(四)· 蘇黎世</span></header><div class="wxr"><span class="wxb"><em>蘇黎世</em><b>3~10°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:57.7%;width:26.9%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:防風外套加圍巾,拜訪公司可在外套內穿正式一點。</p><ul><li>前往 Belimo 辦公室</li></ul><div class="notes"><div class="note "><span class="k">待補</span><span>拜訪時間、地址與聯絡人確定後補上。</span></div></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://maps.app.goo.gl/2QUWyUzPDzkNYvRX6">Moxy Zurich</a></span></div></article></li><li class="day" id="d6" style="--c:var(--zurich)"><div class="dn"><span>DAY</span><b>6</b></div><article class="card"><header><h3>蘇黎世市區觀光</h3><span class="date">11/06(五)· 蘇黎世</span></header><div class="wxr"><span class="wxb"><em>蘇黎世</em><b>3~10°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:57.7%;width:26.9%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:防風外套加圍巾,有雨帶傘。</p><ul><li>市區自由行</li></ul><div class="ideas"><b>可排入</b><ul><li>林登霍夫看市景 → 舊城區 → 班霍夫大街</li><li>瑞士蓮巧克力之家、瑞士國家博物館或蘇黎世美術館</li><li>伴手禮:Sprüngli 馬卡龍、Läderach、Victorinox 軍刀</li></ul></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://maps.app.goo.gl/2QUWyUzPDzkNYvRX6">Moxy Zurich</a></span></div></article></li><li class="day" id="d7" style="--c:var(--zurich)"><div class="dn"><span>DAY</span><b>7</b></div><article class="card"><header><h3>瑞士一日遊</h3><span class="date">11/07(六)· 蘇黎世</span></header><div class="wxr"><span class="wxb"><em>蘇黎世</em><b>3~10°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:57.7%;width:26.9%;background:var(--lucerne)"></i></span></span><span class="wxb cold"><em>山上</em><b>-10~-4°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:7.7%;width:23.1%;background:var(--zurich)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:山上穿羽絨,山下可以脫一層。</p><ul><li>鐵力士山一日遊,<span class="t">8,000 元/人</span></li><li>或 皮拉圖斯山一日遊,<span class="t">7,100 元/人</span></li></ul><div class="notes"><div class="note cold"><span class="k">山區</span><span>兩條路線都在高山。穿保暖配置,帶手套、帽子,鞋底防滑。</span></div><div class="note "><span class="k">二選一</span><span>出發前確定要去哪一座,並預訂。</span></div><div class="note red"><span class="k">皮拉圖斯</span><span>山上纜車 10/19–11/27 停駛,11/7 只有齒軌火車。向賣家確認路線。</span></div></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://maps.app.goo.gl/2QUWyUzPDzkNYvRX6">Moxy Zurich</a></span></div></article></li><li class="day" id="d8" style="--c:var(--munich)"><div class="dn"><span>DAY</span><b>8</b></div><article class="card"><header><h3>蘇黎世 → 慕尼黑 · 老繪畫陳列館</h3><span class="date">11/08(日)· 慕尼黑</span></header><div class="wxr"><span class="wxb"><em>蘇黎世 / 慕尼黑</em><b>2~10°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:53.8%;width:30.8%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:中厚外套加圍巾,列車上暖氣足,穿法要好脫。</p><ul><li><span class="t">09:32 → 13:16</span> 蘇黎世 → 慕尼黑</li><li>訂位車票要印出來</li><li>老繪畫陳列館 <span class="t">10:00–18:00</span>,週日特價 <span class="t">€1</span></li></ul><div class="notes"><div class="note red"><span class="k">座位票</span><span>要先買座位票,訂位車票印出來帶著。</span></div><div class="note "><span class="k">週日</span><span>商店大多休息,到站後先準備好晚餐。</span></div></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://www.lockeliving.com/de/munchen/wunderlocke">WunderLocke, Sendling</a></span></div></article></li><li class="day" id="d9" style="--c:var(--munich)"><div class="dn"><span>DAY</span><b>9</b></div><article class="card"><header><h3>慕尼黑市區 · 教堂</h3><span class="date">11/09(一)· 慕尼黑</span></header><div class="wxr"><span class="wxb"><em>慕尼黑</em><b>2~8°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:53.8%;width:23.1%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:中厚外套加圍巾。</p><ul><li>新市政廳(瑪麗安廣場)→ 穀物市場 → 慕尼黑皇宮 → 皇家啤酒屋</li><li>瑪麗安廣場兩旁是商店街;德國買 RIMOWA 最便宜的店:Lederwaren Hetzenecker</li><li>慕尼黑皇宮 <span class="t">10:00–17:00</span>,全票 <span class="t">€9</span></li></ul><div class="meta"><span><b>早</b> Trachtenvogl 巴伐利亞白香腸</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> 皇家啤酒屋</span><span class="stay"><b>住</b> <a href="https://www.lockeliving.com/de/munchen/wunderlocke">WunderLocke, Sendling</a></span></div></article></li><li class="day" id="d10" style="--c:var(--munich)"><div class="dn"><span>DAY</span><b>10</b></div><article class="card"><header><h3>新天鵝堡 + 上阿默高 + 維斯教堂</h3><span class="date">11/10(二)· 慕尼黑</span></header><div class="wxr"><span class="wxb"><em>慕尼黑</em><b>2~8°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:53.8%;width:23.1%;background:var(--lucerne)"></i></span></span><span class="wxb cold"><em>新天鵝堡一帶</em><b>0~6°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:46.2%;width:23.1%;background:var(--zurich)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:羽絨加手套,防滑鞋。</p><ul><li>費用 <span class="t">3,300 元/人</span>,行程約 10 小時</li><li>集合:慕尼黑長途巴士總站 8 號月台(Munich ZOB Gleis 8)</li><li><span class="t">08:10</span> 集合 · <span class="t">08:30</span> 出發 · 約 <span class="t">18:30</span> 回到總站</li></ul><div class="notes"><div class="note cold"><span class="k">郊外</span><span>阿爾卑斯山腳,比市區冷。保暖外套和防滑鞋都要穿。</span></div><div class="note red"><span class="k">準時</span><span>集合 08:10,從飯店出發前先查好到總站的車程。</span></div></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://www.lockeliving.com/de/munchen/wunderlocke">WunderLocke, Sendling</a></span></div></article></li><li class="day" id="d11" style="--c:var(--munich)"><div class="dn"><span>DAY</span><b>11</b></div><article class="card"><header><h3>BMW · 採購</h3><span class="date">11/11(三)· 慕尼黑</span></header><div class="wxr"><span class="wxb"><em>慕尼黑</em><b>2~8°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:53.8%;width:23.1%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:中厚外套。</p><ul><li>BMW 世界(免費):週一至六 <span class="t">7:30–24:00</span>,週日與假日 <span class="t">9:00–24:00</span></li><li>BMW 博物館:週二至日 <span class="t">10:00–18:00</span>,全票 <span class="t">€10</span></li></ul><div class="notes"><div class="note "><span class="k">打包</span><span>最後一天購物,行李重量和退稅單先整理好。</span></div></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> <span class="todo">待補</span></span><span><b>晚</b> <span class="todo">待補</span></span><span class="stay"><b>住</b> <a href="https://www.lockeliving.com/de/munchen/wunderlocke">WunderLocke, Sendling</a></span></div></article></li><li class="day" id="d12" style="--c:var(--transit)"><div class="dn"><span>DAY</span><b>12</b></div><article class="card"><header><h3>返家 慕尼黑 → 台灣</h3><span class="date">11/12(四)· 移動</span></header><div class="wxr"><span class="wxb"><em>慕尼黑</em><b>2~8°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:53.8%;width:23.1%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:中厚外套,回台灣前把厚衣收進隨身包。</p><ul><li><span class="t">08:00</span> 退房,前往機場</li><li><span class="t">11:30</span> 慕尼黑機場起飛,直飛約 12 小時</li></ul><div class="notes"><div class="note red"><span class="k">護照</span><span>護照、登機證、退稅單放在隨身包。</span></div><div class="note "><span class="k">退稅</span><span>要辦退稅就在託運行李前先到海關蓋章。</span></div></div><div class="meta"><span><b>早</b> 飯店</span><span><b>中</b> 機上</span><span><b>晚</b> 機上</span></div></article></li><li class="day" id="d13" style="--c:var(--transit)"><div class="dn"><span>DAY</span><b>13</b></div><article class="card"><header><h3>抵達台灣</h3><span class="date">11/13(五)· 移動</span></header><div class="wxr"><span class="wxb"><em>桃園</em><b>20~25°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:123.1%;width:19.2%;background:var(--lucerne)"></i></span></span><span class="wxs">11 月平均</span></div><p class="wt">穿搭:台灣約 20 度出頭,抵達前先換薄衣。</p><ul><li><span class="t">06:30</span> 抵達桃園</li></ul></article></li></ol>
+</section>
+
+<section id="guide">
+  <h2>景點與美食 <small>PLACES TO EAT &amp; SEE</small></h2>
+  <div class="gd">
+
+  <details class="g" open><summary>琉森 <small>LUCERNE · 11/2–11/4</small></summary><div class="gb">
+    <div><h4>景點</h4><ul><li><strong>舊城區</strong>漫步</li><li><strong>卡佩爾廊橋</strong>(Chapel Bridge)與斯普洛耶橋</li><li><strong>獅子紀念碑</strong></li><li><strong>穆塞格城牆</strong>(Museggmauer)</li><li>湖畔散步加夜景</li></ul></div>
+    <div><h4>美食</h4><ul><li><strong>Old Swiss House</strong>:桌邊現做炸小牛排</li><li><strong>Pfistern</strong>:老城傳統瑞士菜</li><li><strong>Wirtshaus Galliker</strong>:琉森傳統餡餅 Chügelipastete</li><li><strong>Confiserie Bachmann</strong>:火車站旁,巧克力與甜點</li><li><strong>Mill'Feuille</strong>:湖畔咖啡館</li></ul></div>
+    <div><h4>購物</h4><ul><li>Bachmann、Läderach、Max Chocolatier 的巧克力</li><li>Bucherer、Gübelin 等名錶店</li><li>Victorinox 瑞士軍刀、木雕與音樂盒</li></ul></div>
+  </div></details>
+
+  <details class="g" open><summary>因特拉肯與少女峰 <small>INTERLAKEN · 11/3 一日遊</small></summary><div class="gb">
+    <div class="full"><div class="note red"><span class="k">11/3 路線</span><span>據第三方營運公告,11/3 艾格快線(Eiger Express)與少女峰齒軌火車營運;格林德瓦到小夏戴克的火車 11/6 前停駛;溫根到小夏戴克 11/9 才停駛。上山走艾格快線,下山走小夏戴克、溫根、勞特布魯嫩可行。出發前請到少女峰官網再確認。</span></div></div>
+    <div><h4>上山路線</h4><ul><li>因特拉肯東站 → 格林德瓦 → 艾格快線 → 艾格冰川站 → 少女峰站(3,454m)</li><li>山上順序:Sphinx 觀景台、Snow Fun Park(另外收費)、Alpine Sensation、冰宮、Jungfraujoch Plateau</li></ul></div>
+    <div><h4>下山路線</h4><ul><li>少女峰站 → 小夏戴克 → 溫根 → 勞特布魯嫩 → 因特拉肯東站</li><li>艾格之路(艾格冰川站走到小夏戴克)11 月可能有積雪,現場確認再走。</li></ul></div>
+    <div><h4>山上小事</h4><ul><li>商店區有郵局,寄明信片到台灣約 CHF 2.5,有特別郵戳(郵遞區號 3801)。</li><li>少女峰無法開車直達,你搭火車不受影響。</li></ul></div>
+    <div><h4>其他可看</h4><ul><li><strong>勞特布魯嫩</strong>:72 條瀑布的山谷,Staubbach 瀑布在村口。Trümmelbach 瀑布需收費,11 月是否開放要確認。</li><li><strong>雪朗峰</strong>(Schilthorn):007 電影景點,全年營運,比少女峰人少。</li></ul></div>
+    <div><h4>美食</h4><ul><li><strong>Husi Bierhaus</strong>:起司火鍋</li><li><strong>Bebbis</strong>:起司火鍋、薯餅 Rösti</li><li><strong>Restaurant Des Alpes</strong>:傳統瑞士料理</li><li><strong>Ox Restaurant &amp; Grill</strong>:牛排,份量大</li><li><strong>Little Thai</strong>:想換口味時</li><li><strong>Cafe de Paris</strong>:咖啡甜點</li></ul></div>
+    <div><h4>購物</h4><ul><li>Höheweg 大街有名錶、軍刀、巧克力店</li><li>Coop 超市,以及 Mammut、mont-bell 登山用品店</li></ul></div>
+    <div><h4>已知停駛</h4><ul><li>費爾斯特(First)纜車 10/26–11/27 停駛,不要排。</li><li>布里恩茨洛特峰蒸汽火車 10/25 後結束營運。</li></ul></div>
+  </div></details>
+
+  <details class="g" open><summary>蘇黎世 <small>ZURICH · 11/4–11/7</small></summary><div class="gb">
+    <div><h4>須知</h4><ul><li>金融與交通樞紐,車站很大。都會感和湖畔悠閒並存。</li><li>半天行程抓「舊城區 + 湖畔 + 班霍夫大街」,不用走太遠。</li></ul></div>
+    <div><h4>景點</h4><ul><li><strong>林登霍夫</strong>(Lindenhof):拍市景</li><li><strong>舊城區</strong>:巷弄、教堂、咖啡館</li><li><strong>班霍夫大街</strong>:從車站直通湖畔,鐘錶與精品集中</li><li>蘇黎世聖母大教堂、大教堂、市政廳、歌劇院</li><li>瑞士國家博物館、蘇黎世美術館</li><li><strong>瑞士蓮巧克力之家</strong></li></ul></div>
+    <div><h4>美食</h4><ul><li><strong>Sprüngli Café</strong>(總店):下午茶與甜點</li><li><strong>Zeughauskeller</strong>:香腸、薯餅、蘇黎世式小牛肉</li><li><strong>Kronenhalle</strong>:高檔餐廳,牆上收藏畫作</li><li>老城區餐廳與酒吧,輕鬆用餐</li></ul></div>
+    <div><h4>購物</h4><ul><li>班霍夫大街:Bucherer、Gübelin 名錶</li><li>Victorinox 軍刀專賣店</li><li>Sprüngli、Läderach 巧克力</li><li>伴手禮:Sprüngli 的 Luxemburgerli 馬卡龍</li></ul></div>
+  </div></details>
+
+  <details class="g" open><summary>11/7 山上行程:鐵力士或皮拉圖斯 <small>TITLIS / PILATUS</small></summary><div class="gb">
+    <div class="full"><div class="note red"><span class="k">皮拉圖斯</span><span>據第三方公告,克林斯到 Fräkmüntegg 到山頂的纜車 10/19–11/27 停駛,11/7 搭不到。只有 Alpnachstad 的齒軌火車營運到 11/29。纜車加溜滑梯的路線 11/7 不能走。你的 7,100 元行程實際怎麼上下山,請向賣家確認。</span></div></div>
+    <div><h4>鐵力士山 Titlis</h4><ul><li>火車約 45 分鐘到英格堡(Engelberg),出站轉免費接駁公車(300 路)到山下纜車站。</li><li>亮點:Titlis Rotair 旋轉纜車、冰川吊橋 Cliff Walk。</li><li>海拔高,全年有雪。</li><li>第三方公告 11 月無停駛,出發前請看官網。</li></ul></div>
+    <div><h4>皮拉圖斯山 Pilatus</h4><ul><li>琉森最近的山。</li><li>上山後先預約下山時間。</li><li>世界最陡的齒軌鐵道,行經很多隧道,景觀不多。</li><li>Alpnachstad 回琉森可搭琉森湖遊船約 1 小時,冬季船班要查。</li></ul></div>
+  </div></details>
+
+  </div>
+</section>
+
+<section id="wear">
+  <h2>天氣與穿搭 <small>WEATHER &amp; LAYERS</small></h2>
+  <p class="lead">平地和山上差超過 10 度,最容易穿錯。原則是洋蔥式穿法,山上行程那天多帶一層。</p>
+  <div class="wx">
+    <div class="wxc"><small>琉森 · 蘇黎世 · 白天</small><div class="deg">5~11°C</div><p>會冷但不到寒冬。早晚風大,有雨的機率高。</p></div>
+    <div class="wxc"><small>慕尼黑 · 白天(參考)</small><div class="deg">2~8°C</div><p>比瑞士略冷,晚上接近 0°C。這組數字是一般 11 月的參考值。</p></div>
+    <div class="wxc cold"><small>山區 · 少女峰 / 鐵力士 / 皮拉圖斯</small><div class="deg">-4~-10°C</div><p>會有強風與積雪,體感更低。手套、帽子、防滑鞋是必備。</p></div>
+  </div>
+  <div class="tc" role="img" aria-label="白天氣溫範圍:平地 5 到 11 度,慕尼黑 2 到 8 度,山區零下 10 到零下 4 度"><div class="tr"><span>平地(瑞士)</span><div class="tt"><u style="left:46.15%"></u><i style="left:65.38%;width:23.08%;background:var(--lucerne)">5~11°C</i></div></div><div class="tr"><span>慕尼黑</span><div class="tt"><u style="left:46.15%"></u><i style="left:53.85%;width:23.08%;background:var(--munich)">2~8°C</i></div></div><div class="tr"><span>山區</span><div class="tt"><u style="left:46.15%"></u><i style="left:7.69%;width:23.08%;background:var(--zurich)"></i><b class="o" style="left:32.5%">-10~-4°C</b></div></div><div class="ax"><span style="left:7.69%">-10°</span><span style="left:46.15%">0°</span><span style="left:84.62%">10°</span></div></div>
+  <div class="layers">
+    <table>
+      <thead><tr><th>層次</th><th>平地城市</th><th>山區行程日</th></tr></thead>
+      <tbody>
+        <tr><th>內層</th><td>長袖或發熱衣</td><td>發熱衣加一件保暖內層</td></tr>
+        <tr><th>中層</th><td>毛衣或刷毛外套</td><td>厚刷毛或輕羽絨</td></tr>
+        <tr><th>外層</th><td>防風外套或中厚大衣</td><td>羽絨衣加防風防水外層</td></tr>
+        <tr><th>配件</th><td>圍巾、薄手套</td><td>厚手套、毛帽、圍巾、護耳</td></tr>
+        <tr><th>鞋子</th><td>防滑耐走的鞋,最好防水</td><td>防滑鞋底、保暖襪,再帶一雙備用襪</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 style="margin-top:22px;font-size:16px">哪幾天要穿山上的配置</h3>
+  <div class="strip" id="strip"><div class=""><b>01</b>日</div><div class=""><b>02</b>一</div><div class="m"><b>03</b>二</div><div class=""><b>04</b>三</div><div class=""><b>05</b>四</div><div class=""><b>06</b>五</div><div class="m"><b>07</b>六</div><div class=""><b>08</b>日</div><div class=""><b>09</b>一</div><div class="m"><b>10</b>二</div><div class=""><b>11</b>三</div><div class=""><b>12</b>四</div><div class=""><b>13</b>五</div></div>
+  <div class="legend"><span><i style="background:var(--surface2)"></i>平地城市</span><span><i style="background:var(--cold)"></i>山區或郊外</span></div>
+  <p class="lead" style="font-size:13px;margin-top:10px">出發前一週再查一次當地預報,更新後可以調整。</p>
+</section>
+
+<section id="pack">
+  <h2>行李清單 <small>PACKING</small></h2>
+  <div class="prog"><span id="kn">0 / 35</span><span class="bar"><i id="kb"></i></span></div>
+  <div class="pk" id="pk"><div><h3>證件與金錢</h3><div class="chk"><label><input type="checkbox" id="c-p0-0" data-k="p0-0"><span class="box"></span><span class="txt"><b>訂單截圖</b><em>機票、車票、住宿訂單存手機並可離線看</em></span></label><label><input type="checkbox" id="c-p0-1" data-k="p0-1"><span class="box"></span><span class="txt"><b>信用卡兩張</b></span></label><label><input type="checkbox" id="c-p0-2" data-k="p0-2"><span class="box"></span><span class="txt"><b>現金</b><em>瑞士法郎與歐元</em></span></label><label><input type="checkbox" id="c-p0-3" data-k="p0-3"><span class="box"></span><span class="txt"><b>紙筆</b><em>填表、記地址</em></span></label></div></div><div><h3>衣物</h3><div class="chk"><label><input type="checkbox" id="c-p1-0" data-k="p1-0"><span class="box"></span><span class="txt"><b>羽絨外套</b><em>山區日穿</em></span></label><label><input type="checkbox" id="c-p1-1" data-k="p1-1"><span class="box"></span><span class="txt"><b>厚防風防水外套</b><em>平地主力</em></span></label><label><input type="checkbox" id="c-p1-2" data-k="p1-2"><span class="box"></span><span class="txt"><b>發熱衣 ×2、發熱褲</b><em>內層</em></span></label><label><input type="checkbox" id="c-p1-3" data-k="p1-3"><span class="box"></span><span class="txt"><b>超厚衣褲或機能衣</b><em>山區日加穿</em></span></label><label><input type="checkbox" id="c-p1-4" data-k="p1-4"><span class="box"></span><span class="txt"><b>登山褲或防風長褲</b></span></label><label><input type="checkbox" id="c-p1-5" data-k="p1-5"><span class="box"></span><span class="txt"><b>長袖上衣 ×3</b><em>可疊穿</em></span></label><label><input type="checkbox" id="c-p1-6" data-k="p1-6"><span class="box"></span><span class="txt"><b>睡衣褲</b></span></label><label><input type="checkbox" id="c-p1-7" data-k="p1-7"><span class="box"></span><span class="txt"><b>內褲與襪子</b><em>約 7 組,中途可洗</em></span></label><label><input type="checkbox" id="c-p1-8" data-k="p1-8"><span class="box"></span><span class="txt"><b>備用保暖襪</b><em>山上用,濕了就換</em></span></label><label><input type="checkbox" id="c-p1-9" data-k="p1-9"><span class="box"></span><span class="txt"><b>暖暖包</b><em>山區日與寒冷的早晚使用</em></span></label><label><input type="checkbox" id="c-p1-10" data-k="p1-10"><span class="box"></span><span class="txt"><b>雨傘或輕便雨衣</b></span></label><label><input type="checkbox" id="c-p1-11" data-k="p1-11"><span class="box"></span><span class="txt"><b>太陽眼鏡</b><em>雪地反光強</em></span></label></div></div><div><h3>盥洗與保養</h3><div class="chk"><label><input type="checkbox" id="c-p2-0" data-k="p2-0"><span class="box"></span><span class="txt"><b>牙刷牙膏、刮鬍刀</b></span></label><label><input type="checkbox" id="c-p2-1" data-k="p2-1"><span class="box"></span><span class="txt"><b>洗面乳、洗髮精</b><em>小瓶分裝,隨身液體每瓶不超過 100ml</em></span></label><label><input type="checkbox" id="c-p2-2" data-k="p2-2"><span class="box"></span><span class="txt"><b>保濕乳、護唇膏、護手霜</b><em>乾冷天氣</em></span></label><label><input type="checkbox" id="c-p2-3" data-k="p2-3"><span class="box"></span><span class="txt"><b>防曬乳</b><em>高山雪地紫外線強</em></span></label></div></div><div><h3>電子產品</h3><div class="chk"><label><input type="checkbox" id="c-p3-0" data-k="p3-0"><span class="box"></span><span class="txt"><b>手機</b></span></label><label><input type="checkbox" id="c-p3-1" data-k="p3-1"><span class="box"></span><span class="txt"><b>行動電源</b><em>放隨身行李,不能託運</em></span></label><label><input type="checkbox" id="c-p3-2" data-k="p3-2"><span class="box"></span><span class="txt"><b>充電頭與傳輸線</b></span></label><label><input type="checkbox" id="c-p3-3" data-k="p3-3"><span class="box"></span><span class="txt"><b>相機與記憶卡</b></span></label><label><input type="checkbox" id="c-p3-4" data-k="p3-4"><span class="box"></span><span class="txt"><b>耳機</b></span></label></div></div><div><h3>藥品與健康</h3><div class="chk"><label><input type="checkbox" id="c-p4-0" data-k="p4-0"><span class="box"></span><span class="txt"><b>OK繃與藥膏</b></span></label><label><input type="checkbox" id="c-p4-1" data-k="p4-1"><span class="box"></span><span class="txt"><b>胃藥、止痛藥、感冒藥</b></span></label><label><input type="checkbox" id="c-p4-2" data-k="p4-2"><span class="box"></span><span class="txt"><b>暈車暈機藥</b></span></label><label><input type="checkbox" id="c-p4-3" data-k="p4-3"><span class="box"></span><span class="txt"><b>眼藥水</b></span></label><label><input type="checkbox" id="c-p4-4" data-k="p4-4"><span class="box"></span><span class="txt"><b>個人常用藥</b><em>附英文名稱</em></span></label><label><input type="checkbox" id="c-p4-5" data-k="p4-5"><span class="box"></span><span class="txt"><b>指甲剪</b></span></label></div></div><div><h3>其他</h3><div class="chk"><label><input type="checkbox" id="c-p5-0" data-k="p5-0"><span class="box"></span><span class="txt"><b>折疊購物袋</b><em>採購與伴手禮</em></span></label><label><input type="checkbox" id="c-p5-1" data-k="p5-1"><span class="box"></span><span class="txt"><b>洗衣袋、衣架</b></span></label><label><input type="checkbox" id="c-p5-2" data-k="p5-2"><span class="box"></span><span class="txt"><b>行李鎖</b></span></label><label><input type="checkbox" id="c-p5-3" data-k="p5-3"><span class="box"></span><span class="txt"><b>旅行枕、眼罩、耳塞</b><em>兩段長程飛行</em></span></label></div></div></div>
+</section>
+
+<section id="info">
+  <h2>實用資訊 <small>GOOD TO KNOW</small></h2>
+  <div class="info">
+    <div class="ib">
+      <h3>插座與電器</h3>
+      <p>瑞士用 <strong>Type J、Type C</strong>,德國用 <strong>Type C / E</strong>。</p>
+      <ul>
+        <li>有些 C 型插頭的腳比較粗,插不進瑞士的 J 型插座。</li>
+        <li>筆電、吹風機這類需要接地的電器,在瑞士要準備支援 Type J 的轉接頭。</li>
+      </ul>
+    </div>
+    <div class="ib">
+      <h3>德國自動售票機刷卡</h3>
+      <ul>
+        <li>信用卡付費會要求輸入 <strong>4 位數 PIN</strong>。台灣信用卡一般沒有,出發前請銀行提供「預借現金」PIN。</li>
+        <li>已在國外來不及申請:先按 <span class="num">#</span> 跳過,或輸入 <span class="num">0000</span> 讓機器辨識為國外卡。</li>
+        <li>仍然不行就到櫃台購票,告知要用簽單簽名。</li>
+      </ul>
+    </div>
+    <div class="ib">
+      <h3>開放時間與費用</h3>
+      <div class="tw"><table>
+        <tr><th>老繪畫陳列館</th><td>10:00–18:00</td><td>週日特價 <span class="num">€1</span></td></tr>
+        <tr><th>慕尼黑皇宮</th><td>10:00–17:00</td><td>全票 <span class="num">€9</span></td></tr>
+        <tr><th>BMW 世界</th><td>週一至六 7:30–24:00<br>週日與假日 9:00–24:00</td><td>免費</td></tr>
+        <tr><th>BMW 博物館</th><td>週二至日 10:00–18:00</td><td>全票 <span class="num">€10</span></td></tr>
+      </table></div>
+    </div>
+    <div class="ib">
+      <h3>一日遊費用</h3>
+      <div class="tw"><table>
+        <tr><th>11/7</th><td>鐵力士山</td><td class="num">8,000 元/人</td></tr>
+        <tr><th>11/7</th><td>皮拉圖斯山(二選一)</td><td class="num">7,100 元/人</td></tr>
+        <tr><th>11/10</th><td>新天鵝堡 + 上阿默高 + 維斯教堂</td><td class="num">3,300 元/人</td></tr>
+      </table></div>
+    </div>
+    <div class="ib">
+      <h3>購物與退稅 <span class="chk-new" style="font-size:11px;color:var(--lucerne)">建議</span></h3>
+      <ul>
+        <li>11/8 是週日,瑞士和德國的一般商店幾乎都休息。到慕尼黑後的採買排在 11/9 或 11/11。</li>
+        <li>要辦退稅的話,結帳時帶護照並索取退稅單,11/12 在機場託運前先到海關蓋章。</li>
+        <li>RIMOWA 的店在瑪麗安廣場旁:Lederwaren Hetzenecker。</li>
+      </ul>
+    </div>
+    <div class="ib">
+      <h3>緊急聯絡</h3>
+      <ul>
+        <li>歐洲通用緊急電話:<span class="num">112</span>(瑞士、德國都可撥)</li>
+        <li>瑞士:警察 <span class="num">117</span>、救護 <span class="num">144</span>、消防 <span class="num">118</span></li>
+        <li>德國:警察 <span class="num">110</span></li>
+        <li>外交部旅外國人緊急服務專線:<span class="num">+886-800-085-095</span></li>
+        <li>機場與各飯店的聯絡方式確定後補在這裡。</li>
+        <li>同行每個人的緊急聯絡人:<span class="todo">待補</span></li>
+      </ul>
+    </div>
+    <div class="ib">
+      <h3>住宿一覽</h3>
+      <div class="stays">
+        <div><i style="background:var(--lucerne)"></i><strong>琉森</strong> 11/2 – 11/4 <a href="https://maps.app.goo.gl/XAJSxi4dTwSk1aHm6">Hotel Seeburg, Luzern</a></div>
+        <div><i style="background:var(--zurich)"></i><strong>蘇黎世</strong> 11/4 – 11/8 <a href="https://maps.app.goo.gl/2QUWyUzPDzkNYvRX6">Moxy Zurich</a></div>
+        <div><i style="background:var(--munich)"></i><strong>慕尼黑</strong> 11/8 – 11/11 <a href="https://www.lockeliving.com/de/munchen/wunderlocke">WunderLocke, Sendling</a></div>
+      </div>
+    </div>
+    <div class="ib">
+      <h3>山區日小提醒</h3>
+      <ul>
+        <li>出發前一晚和當天早上看山上即時攝影機,雲太厚就換行程順序。</li>
+        <li>上山後先預約下山時間或班次,避免尖峰排隊。</li>
+        <li>高山日照強,墨鏡和防曬乳要帶。</li>
+        <li>11 月是設施維修期,先到各山的官網查營運。</li>
+      </ul>
+    </div>
+    <div class="ib">
+      <h3>相關連結</h3>
+      <ul>
+        <li><a href="https://www.sbb.ch/en?stops=Z%C3%BCrich+HB_I8503000~M%C3%BCnchen+Hbf_I8020347&day=2026-11-08&time=05_00&moment=dep&direct=1&trip=0_1">SBB 蘇黎世 → 慕尼黑 11/8 班次</a></li>
+        <li><a href="https://www.klook.com/zh-TW/activity/9868-global-interrail-pass/">Klook Interrail 全球通行證</a></li>
+        <li><a href="https://www.lockeliving.com/de/munchen/wunderlocke">慕尼黑飯店 WunderLocke</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="todo">
+  <h2>還沒定的項目 <small>TO FILL IN</small></h2>
+  <div class="pend">
+    <ul>
+      <li>琉森和蘇黎世的飯店</li>
+      <li>11/7 鐵力士山或皮拉圖斯山二選一</li>
+      <li>11/3 少女峰、11/4–11/6 蘇黎世行程的細節與時間</li>
+      <li>11/5 Belimo 辦公室的地址、拜訪時間與聯絡人</li>
+      <li>各天午餐與晚餐(可從「景點美食」挑)</li>
+      <li>11/7 皮拉圖斯山纜車停駛,確認一日遊的實際路線</li>
+      <li>少女峰、鐵力士的實際票價與 Interrail 折扣</li>
+      <li>11/8 座位票購買,與訂位車票列印</li>
+      <li>同行每個人的緊急聯絡人(姓名與電話)</li>
+    </ul>
+  </div>
+  <footer>2026/11/01 – 11/13 · 德瑞之旅</footer>
+</section>
+
+</main>
+
+<script>
+(function(){
+var CITY={l:{n:'琉森',c:'var(--lucerne)'},z:{n:'蘇黎世',c:'var(--zurich)'},m:{n:'慕尼黑',c:'var(--munich)'},t:{n:'移動',c:'var(--transit)'}};
+var HOTEL_L='<a href="https://maps.app.goo.gl/XAJSxi4dTwSk1aHm6">Hotel Seeburg, Luzern</a>';
+var HOTEL_Z='<a href="https://maps.app.goo.gl/2QUWyUzPDzkNYvRX6">Moxy Zurich</a>';
+var HOTEL_M='<a href="https://www.lockeliving.com/de/munchen/wunderlocke">WunderLocke, Sendling</a>';
+var D=[
+{n:1,d:'11/01',w:'日',c:'t',title:'啟程 桃園 → 杜拜',items:['<span class="t">23:00</span> 桃園機場起飛','<span class="t">04:45</span>(11/2)抵達杜拜,轉機','飛行約 9 小時 45 分'],notes:[['red','護照','機票和護照放隨身包,辦理報到時隨手拿得到。']],meals:{晚:'機上'},hotel:null,mt:false},
+{n:2,d:'11/02',w:'一',c:'l',title:'杜拜 → 蘇黎世 → 琉森',items:['<span class="t">08:25</span> 杜拜起飛 → <span class="t">12:25</span> 蘇黎世(當地時間)','抵達後搭火車前往琉森'],notes:[['red','入境','蘇黎世入境會登記指紋和臉部照片,預留排隊時間。'],['','時差','手機改成當地時間,到琉森盡量撐到晚上再睡。']],ideas:['傍晚抵達後輕鬆走:卡佩爾廊橋、舊城區、湖畔夜景','晚餐候選:Old Swiss House、Pfistern、Galliker'],meals:{早:'機上',中:'',晚:''},hotel:HOTEL_L,mt:false},
+{n:3,d:'11/03',w:'二',c:'l',title:'琉森 → 因特拉肯一日遊(少女峰)',items:['琉森出發,前往因特拉肯與少女峰'],notes:[['cold','山區','山上 -4~-10°C。穿羽絨衣、厚手套、毛帽,鞋底要防滑。'],['','預約','少女峰車票與時段請先確認。'],['red','11/3 路線','上山走艾格快線,下山走小夏戴克、溫根、勞特布魯嫩。細節見「景點美食」。']],ideas:['山上郵局寄明信片回台灣,約 CHF 2.5','午餐或晚餐:因特拉肯的 Husi Bierhaus 或 Bebbis(起司火鍋)'],meals:{早:'飯店',中:'',晚:''},hotel:HOTEL_L,mt:true},
+{n:4,d:'11/04',w:'三',c:'z',title:'琉森 → 蘇黎世',items:['搭火車前往蘇黎世,辦理入住'],notes:[],ideas:['入住後散步班霍夫大街到湖畔','甜點:Sprüngli Café;晚餐:Zeughauskeller'],meals:{早:'飯店',中:'',晚:''},hotel:HOTEL_Z,mt:false},
+{n:5,d:'11/05',w:'四',c:'z',title:'蘇黎世 → Belimo 辦公室',items:['前往 Belimo 辦公室'],notes:[['','待補','拜訪時間、地址與聯絡人確定後補上。']],meals:{早:'飯店',中:'',晚:''},hotel:HOTEL_Z,mt:false},
+{n:6,d:'11/06',w:'五',c:'z',title:'蘇黎世市區觀光',items:['市區自由行'],notes:[],ideas:['林登霍夫看市景 → 舊城區 → 班霍夫大街','瑞士蓮巧克力之家、瑞士國家博物館或蘇黎世美術館','伴手禮:Sprüngli 馬卡龍、Läderach、Victorinox 軍刀'],meals:{早:'飯店',中:'',晚:''},hotel:HOTEL_Z,mt:false},
+{n:7,d:'11/07',w:'六',c:'z',title:'瑞士一日遊',items:['鐵力士山一日遊,<span class="t">8,000 元/人</span>','或 皮拉圖斯山一日遊,<span class="t">7,100 元/人</span>'],notes:[['cold','山區','兩條路線都在高山。穿保暖配置,帶手套、帽子,鞋底防滑。'],['','二選一','出發前確定要去哪一座,並預訂。'],['red','皮拉圖斯','山上纜車 10/19–11/27 停駛,11/7 只有齒軌火車。向賣家確認路線。']],meals:{早:'飯店',中:'',晚:''},hotel:HOTEL_Z,mt:true},
+{n:8,d:'11/08',w:'日',c:'m',title:'蘇黎世 → 慕尼黑 · 老繪畫陳列館',items:['<span class="t">09:32 → 13:16</span> 蘇黎世 → 慕尼黑','訂位車票要印出來','老繪畫陳列館 <span class="t">10:00–18:00</span>,週日特價 <span class="t">€1</span>'],notes:[['red','座位票','要先買座位票,訂位車票印出來帶著。'],['','週日','商店大多休息,到站後先準備好晚餐。']],meals:{早:'飯店',中:'列車上有餐車(另外付費)',晚:'Augustiner Keller'},hotel:HOTEL_M,mt:false},
+{n:9,d:'11/09',w:'一',c:'m',title:'慕尼黑市區 · 教堂',items:['新市政廳(瑪麗安廣場)→ 穀物市場 → 慕尼黑皇宮 → 皇家啤酒屋','瑪麗安廣場兩旁是商店街;德國買 RIMOWA 最便宜的店:Lederwaren Hetzenecker','慕尼黑皇宮 <span class="t">10:00–17:00</span>,全票 <span class="t">€9</span>','冰淇淋:Der verrückte Eismacher(Pancake Wunderland 內)','<span class="t">18:00</span> 皇家啤酒屋(已預約)'],notes:[['','採買','隔天 11/10 的早餐在今天先到超市買好。']],meals:{早:'Schmalznudel - Cafe Frischhut(9:00 開始營業)',中:'Burgermeister Türkenstraße',晚:'皇家啤酒屋(已預約 18:00)'},hotel:HOTEL_M,mt:false},
+{n:10,d:'11/10',w:'二',c:'m',title:'新天鵝堡 + 上阿默高 + 維斯教堂',items:['費用 <span class="t">3,300 元/人</span>,行程約 10 小時','集合:慕尼黑長途巴士總站 8 號月台(Munich ZOB Gleis 8)','<span class="t">08:10</span> 集合 · <span class="t">08:30</span> 出發 · 約 <span class="t">18:30</span> 回到總站'],notes:[['cold','郊外','阿爾卑斯山腳,比市區冷。保暖外套和防滑鞋都要穿。'],['red','準時','集合 08:10,從飯店出發前先查好到總站的車程。']],meals:{早:'前一天在超市買好',中:'',晚:'飯店附近印度餐廳或韓式烤肉'},hotel:HOTEL_M,mt:true},
+{n:11,d:'11/11',w:'三',c:'m',title:'BMW · 採購',items:['BMW 世界(免費):週一至六 <span class="t">7:30–24:00</span>,週日與假日 <span class="t">9:00–24:00</span>','BMW 博物館:週二至日 <span class="t">10:00–18:00</span>,全票 <span class="t">€10</span>'],notes:[['','打包','最後一天購物,行李重量和退稅單先整理好。']],meals:{早:'飯店',中:'',晚:''},hotel:HOTEL_M,mt:false},
+{n:12,d:'11/12',w:'四',c:'t',title:'返家 慕尼黑 → 台灣',items:['<span class="t">06:30</span> 集合、退房','<span class="t">07:00</span> 計程車從飯店出發','<span class="t">08:00</span> 機場報到、安檢、出境','<span class="t">11:30</span> 慕尼黑機場起飛,直飛約 12 小時'],notes:[['red','護照','護照、登機證、退稅單放在隨身包。'],['','退稅','要辦退稅就在託運行李前先到海關蓋章。']],meals:{早:'前一天先在超市買麵包,或在機場候機時找餐廳',中:'機上',晚:'機上'},hotel:null,mt:false},
+{n:13,d:'11/13',w:'五',c:'t',title:'抵達台灣',items:['<span class="t">06:30</span> 抵達桃園'],notes:[],meals:null,hotel:null,mt:false}
+];
+function esc(s){return s}
+var WX={1:[['桃園',20,25]],2:[['蘇黎世 / 琉森',3,10]],3:[['因特拉肯',2,9],['少女峰',-10,-4,1]],4:[['蘇黎世',3,10]],5:[['蘇黎世',3,10]],6:[['蘇黎世',3,10]],7:[['蘇黎世',3,10],['山上',-10,-4,1]],8:[['蘇黎世 / 慕尼黑',2,10]],9:[['慕尼黑',2,8]],10:[['慕尼黑',2,8],['新天鵝堡一帶',0,6,1]],11:[['慕尼黑',2,8]],12:[['慕尼黑',2,8]],13:[['桃園',20,25]]};
+var WT={1:'機上冷氣強,帶一件薄外套。',2:'下機後加厚外套和圍巾,琉森傍晚更冷。',3:'羽絨衣、厚手套、毛帽,鞋底要防滑。',4:'防風外套加圍巾。',5:'防風外套加圍巾,拜訪公司可在外套內穿正式一點。',6:'防風外套加圍巾,有雨帶傘。',7:'山上穿羽絨,山下可以脫一層。',8:'中厚外套加圍巾,列車上暖氣足,穿法要好脫。',9:'中厚外套加圍巾。',10:'羽絨加手套,防滑鞋。',11:'中厚外套。',12:'中厚外套,回台灣前把厚衣收進隨身包。',13:'台灣約 20 度出頭,抵達前先換薄衣。'};
+function wxHtml(n){var a=WX[n];if(!a)return '';return '<div class="wxr">'+a.map(function(w){var l=(w[1]+12)/26*100,wd=(w[2]-w[1])/26*100;return '<span class="wxb'+(w[3]?' cold':'')+'"><em>'+w[0]+'</em><b>'+w[1]+'~'+w[2]+'°C</b><span class="mt"><u style="left:46.15%"></u><i style="left:'+l.toFixed(1)+'%;width:'+wd.toFixed(1)+'%;background:'+(w[3]?'var(--zurich)':'var(--lucerne)')+'"></i></span></span>'}).join('')+'<span class="wxs">11 月平均</span></div>'+(WT[n]?'<p class="wt">穿搭:'+WT[n]+'</p>':'')}
+var tl=document.getElementById('tl'),fl=document.getElementById('filters');
+function render(f){
+  tl.innerHTML=D.filter(function(x){return f==='all'||x.c===f}).map(function(x){
+    var c=CITY[x.c];
+    var notes=x.notes.map(function(n){return '<div class="note '+n[0]+'"><span class="k">'+n[1]+'</span><span>'+n[2]+'</span></div>'}).join('');
+    var meals=x.meals?Object.keys(x.meals).map(function(k){var v=x.meals[k];return '<span><b>'+k+'</b> '+(v?v:'<span class="todo">待補</span>')+'</span>'}).join(''):'';
+    var hotel=x.hotel?'<span class="stay"><b>住</b> '+(x.hotel.indexOf('待')>-1?x.hotel.replace(/(\(.*\))/,'<span class="p">$1</span>'):x.hotel)+'</span>':'';
+    return '<li class="day" id="d'+x.n+'" style="--c:'+c.c+'"><div class="dn"><span>DAY</span><b>'+x.n+'</b></div>'+
+      '<article class="card"><header><h3>'+x.title+'</h3><span class="date">'+x.d+'('+x.w+')· '+c.n+'</span></header>'+
+      wxHtml(x.n)+'<ul>'+x.items.map(function(i){return '<li>'+i+'</li>'}).join('')+'</ul>'+
+      (notes?'<div class="notes">'+notes+'</div>':'')+(x.ideas?'<div class="ideas"><b>可排入</b><ul>'+x.ideas.map(function(i){return '<li>'+i+'</li>'}).join('')+'</ul></div>':'')+
+      ((meals||hotel)?'<div class="meta">'+meals+hotel+'</div>':'')+'</article></li>';
+  }).join('');
+}
+var FS=[['all','全部'],['l','琉森'],['z','蘇黎世'],['m','慕尼黑']];
+fl.innerHTML=FS.map(function(f,i){return '<button type="button" data-f="'+f[0]+'" aria-pressed="'+(i===0)+'">'+f[1]+'</button>'}).join('');
+fl.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  [].forEach.call(fl.children,function(x){x.setAttribute('aria-pressed',x===b)});render(b.dataset.f)});
+render('all');
+
+document.getElementById('strip').innerHTML=D.map(function(x){return '<div class="'+(x.mt?'m':'')+'"><b>'+x.d.slice(3)+'</b>'+x.w+'</div>'}).join('');
+
+var C=[
+['passport','護照與機票','護照效期到 2027/2 以後,機票電子檔存手機並列印',0],
+['pass2','護照影本','紙本與手機各存一份護照影本和照片',1],
+['ins','旅平險與海外醫療','出發前買好,保單號碼存手機',1],
+['pin','信用卡 4 位數 PIN','向銀行申請預借現金 PIN,德國售票機會用到',0],
+['fx','換匯(瑞士法郎 / 歐元)','瑞士用 CHF,德國用 EUR',0],
+['sim','國際漫遊','費用上限 2,600 元,出發前確認已開通',0],
+['ir','Interrail 通行證','設定旅行日期,啟用通行證',1],
+['seat','11/8 座位票','蘇黎世 09:32 → 慕尼黑 13:16,要先購買,並把訂位車票印出來',0],
+['sbb','SBB Mobile App','瑞士火車時刻與購票;德國另外裝 DB Navigator',1],
+['adp','轉接頭','Type J 與 Type C / E,吹風機和筆電特別注意',0],
+['emg','緊急聯絡資訊','機場、飯店、保險、同行每個人的緊急聯絡人與電話,手機和紙本各一份',0],
+['noodle','泡麵 / 免洗筷','',0],
+['bottle','保溫瓶','山上和天冷時都很有用',0],
+['mask','口罩','',0],
+['gloves','手套、毛帽、圍巾','山區行程日必備',1],
+['shoes','防滑耐走的鞋','',0]
+];
+var KEY='trip-de-ch-2026-chk',st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+var box=document.getElementById('chk');
+box.innerHTML=C.map(function(c){return '<label><input type="checkbox" id="c-'+c[0]+'" data-k="'+c[0]+'"'+(st[c[0]]?' checked':'')+'><span class="box"></span><span class="txt"><b>'+c[1]+(c[3]?'<span class="new">建議</span>':'')+'</b>'+(c[2]?'<em>'+c[2]+'</em>':'')+'</span></label>'}).join('');
+function prog(){var a=box.querySelectorAll('input'),n=0;[].forEach.call(a,function(i){if(i.checked)n++});
+  document.getElementById('pn').textContent=n+' / '+a.length;document.getElementById('pb').style.width=(100*n/a.length)+'%'}
+box.addEventListener('change',function(e){st[e.target.dataset.k]=e.target.checked;try{localStorage.setItem(KEY,JSON.stringify(st))}catch(x){}prog()});
+prog();
+
+var P=[
+['證件與金錢',['訂單截圖|機票、車票、住宿訂單存手機並可離線看','信用卡兩張','現金|瑞士法郎與歐元','紙筆|填表、記地址']],
+['衣物',['羽絨外套|山區日穿','厚防風防水外套|平地主力','發熱衣 ×2、發熱褲|內層','超厚衣褲或機能衣|山區日加穿','登山褲或防風長褲','長袖上衣 ×3|可疊穿','睡衣褲','內褲與襪子|約 7 組,中途可洗','備用保暖襪|山上用,濕了就換','暖暖包|山區日與寒冷的早晚使用','雨傘或輕便雨衣','太陽眼鏡|雪地反光強']],
+['盥洗與保養',['牙刷牙膏、刮鬍刀','洗面乳、洗髮精|小瓶分裝,隨身液體每瓶不超過 100ml','保濕乳、護唇膏、護手霜|乾冷天氣','防曬乳|高山雪地紫外線強']],
+['電子產品',['手機','行動電源|放隨身行李,不能託運','充電頭與傳輸線','相機與記憶卡','耳機']],
+['藥品與健康',['OK繃與藥膏','胃藥、止痛藥、感冒藥','暈車暈機藥','眼藥水','個人常用藥|附英文名稱','指甲剪']],
+['其他',['折疊購物袋|採購與伴手禮','洗衣袋、衣架','行李鎖','旅行枕、眼罩、耳塞|兩段長程飛行']]
+];
+var pk=document.getElementById('pk');
+pk.innerHTML=P.map(function(g,gi){return '<div><h3>'+g[0]+'</h3><div class="chk">'+g[1].map(function(t,ti){var a=t.split('|'),k='p'+gi+'-'+ti;
+  return '<label><input type="checkbox" id="c-'+k+'" data-k="'+k+'"'+(st[k]?' checked':'')+'><span class="box"></span><span class="txt"><b>'+a[0]+'</b>'+(a[1]?'<em>'+a[1]+'</em>':'')+'</span></label>'}).join('')+'</div></div>'}).join('');
+function kprog(){var a=pk.querySelectorAll('input'),n=0;[].forEach.call(a,function(i){if(i.checked)n++});
+  document.getElementById('kn').textContent=n+' / '+a.length;document.getElementById('kb').style.width=(100*n/a.length)+'%'}
+pk.addEventListener('change',function(e){st[e.target.dataset.k]=e.target.checked;try{localStorage.setItem(KEY,JSON.stringify(st))}catch(x){}kprog()});
+kprog();
+
+var links=[].slice.call(document.querySelectorAll('nav a')),secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+function spy(){var y=window.scrollY+120,cur=0;secs.forEach(function(s,i){if(s.offsetTop<=y)cur=i});links.forEach(function(a,i){a.setAttribute('aria-current',i===cur)})}
+window.addEventListener('scroll',spy,{passive:true});spy();
+})();
+</script>
+
+</body>
+</html>
