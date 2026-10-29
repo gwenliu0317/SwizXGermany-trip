@@ -249,6 +249,7 @@ html{scroll-behavior:smooth}
     <div class="route" aria-label="路線">琉森<i></i>因特拉肯<i></i>蘇黎世<i></i>慕尼黑</div>
     <div class="facts">
       <div><b>天數</b><span>13 DAYS</span></div>
+      <div><b>交通</b><span>INTERRAIL</span></div>
       <div><b>時差</b><span>慢台灣 7 小時</span></div>
       <div><b>氣溫</b><span>5~11°C / 山 -4~-10°C</span></div>
     </div>
@@ -584,5 +585,6 @@ window.addEventListener('scroll',spy,{passive:true});spy();
 })();
 </script>
 
+<script>if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){})})}</script>
 </body>
 </html>
